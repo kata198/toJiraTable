@@ -34,7 +34,7 @@ if __name__ == '__main__':
             keywords=['JIRA', 'table', 'to', 'toJiraTable', 'convert', 'string', 'stdin', 'input', 'header', 'body'],
             classifiers=['Development Status :: 5 - Production/Stable',
                          'Programming Language :: Python',
-                         'License :: OSI Approved :: GNU General Public License v3 (LGPLv3)',
+                         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
                          'Programming Language :: Python :: 2',
                           'Programming Language :: Python :: 2',
                           'Programming Language :: Python :: 2.6',
