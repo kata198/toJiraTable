@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+# Copyright (c) 2015 Timothy Savannah under GPLv3. See LICENSE for more information.
+#
+# toJiraTable - Converts input on stdin to a JIRA table.
+
+import shlex
+import sys
+
+
+def printUsage():
+    sys.stderr.write('''Usage: toJiraTable
+  Converts stdin to a JIRA table. If no arguments provided, it will use "shell-style" splitting
+    so quoting strings with spaces makes them a single column, otherwise spaces/tabs/whatever
+    splits. The first line passed in becomes the header, the remainder become the body.
+
+  By default, everything will be matched to the longest row. Any missing columns in a row will
+    be filled by blank columns at the end. Use --no-stretch to disable this.
+
+  Arguments:
+
+    --no-stretch                -  Do not stretch each row to the longest row. See above.
+    --split-header-by=X         -  Instead of using shell-style splitting, split by provided string for the header line
+    --split-body-by=X           -  Instead of using shell-style splitting, split by the provided string for body lines
+    --split-by=X                -  Split both header and body by the given string
+    --split-keep-empty          -  By default, using the --split-by* will strip empty columns. The default behaviour is 
+                                     useful, in example: if a script outputs strings which are not quoted, but has at least two
+                                     spaces between each real column, using --split-body-by='  '  will ensure that any place that 
+                                     is separated by two or more spaces becomes a column. This option disables that feature.
+
+''')    
+
+def handleSpecialCharConversion(item):
+    if not item:
+        return item
+    if item == "\\t":
+        return "\t"
+    if item == "\\0":
+        return "\0"
+
+
+if __name__ == '__main__':
+
+    isStretched = True
+    splitHeaderBy = None
+    splitBodyBy = None
+    splitKeepEmpty = False
+
+    args = sys.argv[1:]
+    numArgs = len(args)
+    for i in range(numArgs):
+        arg = args[i]
+        if arg == '--no-stretch':
+            isStretched = False
+        elif arg.startswith('--split-by='):
+            splitBodyBy = splitHeaderBy = handleSpecialCharConversion(arg[len('--split-by='):])
+        elif arg.startswith('--split-header-by='):
+            splitHeaderBy = handleSpecialCharConversion(arg[len('--split-header-by='):])
+        elif arg.startswith('--split-body-by='):
+            splitBodyBy = handleSpecialCharConversion(arg[len('--split-body-by='):])
+        elif arg == '--split-keep-empty':
+            splitKeepEmpty = True
+        elif arg == '--help':
+            printUsage()
+            sys.exit(1)
+        else:
+            sys.stderr.write('Unknown argument: %s\n' %(arg,))
+            printUsage()
+            sys.exit(1)
+
+    contents = sys.stdin.read().replace('\r', '')
+
+    lines = [line for line in contents.split('\n') if line]
+    output = []
+
+    header = lines.pop(0)
+
+    if splitHeaderBy is None:
+        try:
+            headerSplit = [x.strip() for x in shlex.split(header)]
+        except:
+            headerSplit = [x.strip() for x in header.split()]
+    else:
+        headerSplit = [x.strip() for x in header.split(splitHeaderBy)]
+        if splitKeepEmpty is False:
+            headerSplit = [x for x in headerSplit if x]
+        
+
+    maxCols = len(headerSplit)
+
+    lineSplits = []
+    for line in lines:
+        if splitBodyBy is None:
+            try:
+                lineSplit = [x.strip() for x in shlex.split(line)]
+            except:
+                lineSplit = [x.strip() for x in line.split()]
+        else:
+            lineSplit = [x.strip() for x in line.split(splitBodyBy)]
+            if splitKeepEmpty is False:
+                lineSplit = [x for x in lineSplit if x]
+
+        thisLen = len(lineSplit)
+        if thisLen > maxCols:
+            maxCols = thisLen
+
+        lineSplits.append(lineSplit)
+
+    if isStretched is True:
+        headerSplit += [' ' for i in range(maxCols - len(headerSplit))]
+        numLines = len(lineSplits)
+        for lineNum in range(numLines):
+            lineSplits[lineNum] += [' ' for i in range(maxCols - len(lineSplits[lineNum]))]
+
+    output.append('||' + '||'.join(headerSplit) + '||')
+
+    for lineSplit in lineSplits:
+        output.append('|' + '|'.join(lineSplit) + '|')
+
+    sys.stdout.write('\n'.join(output))
+    sys.stdout.write('\n')
+
+# vim: set ts=4 sw=4 expandtab :

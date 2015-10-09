@@ -1,0 +1,7 @@
+include ChangeLog
+include LICENSE
+include MANIFEST.in
+include README.md
+include README.rst
+include setup.py
+include toJiraTable
