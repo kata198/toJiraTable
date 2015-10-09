@@ -14,14 +14,14 @@ if __name__ == '__main__':
     SHORT_DESCRIPTION = 'A tool which reads input from stdin and converts it to a JIRA table'
 
     try:
-        with open('README.rst', 'r') as f:
+        with open('README.rst', 'rt') as f:
             long_description = f.read()
     except:
         long_description = SHORT_DESCRIPTION
 
 
     setup(name='toJiraTable',
-            version='1.0',
+            version='1.0.0',
             scripts=['toJiraTable'],
             author='Tim Savannah',
             author_email='kata198@gmail.com',
