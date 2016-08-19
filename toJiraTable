@@ -80,7 +80,14 @@ if __name__ == '__main__':
             printUsage()
             sys.exit(1)
 
-    contents = sys.stdin.read().replace('\r', '')
+
+    try:
+        contents = sys.stdin.read().replace('\r', '')
+    except KeyboardInterrupt:
+        sys.exit(2)
+    except Exception:
+        sys.exit(5)
+
 
     lines = [line for line in contents.split('\n') if line]
     output = []
