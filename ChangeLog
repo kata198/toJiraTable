@@ -1,0 +1,4 @@
+1.1.0 - Aug 19 2016
+* Fix bug where specified splits could be ignored
+* Add version information to help and --version switch
+* If program is run without a pipe and someone hits control+c, don't print the stack trace.

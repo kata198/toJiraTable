@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright (c) 2015 Timothy Savannah under GPLv3. See LICENSE for more information.
+# Copyright (c) 2015, 2016 Timothy Savannah under GPLv3. See LICENSE for more information.
 #
 # toJiraTable - Converts input on stdin to a JIRA table.
 

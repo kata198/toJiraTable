@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
 
     setup(name='toJiraTable',
-            version='1.0.0',
+            version='1.1.0',
             scripts=['toJiraTable'],
             author='Tim Savannah',
             author_email='kata198@gmail.com',
