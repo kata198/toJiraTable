@@ -7,6 +7,9 @@ import shlex
 import sys
 
 
+__version__ = '1.1.0'
+__version_tuple__ = (1, 1, 0)
+
 def printUsage():
     sys.stderr.write('''Usage: toJiraTable
   Converts stdin to a JIRA table. If no arguments provided, it will use "shell-style" splitting
@@ -27,7 +30,12 @@ def printUsage():
                                      spaces between each real column, using --split-body-by='  '  will ensure that any place that 
                                      is separated by two or more spaces becomes a column. This option disables that feature.
 
-''')    
+
+''')
+    printVersion()
+
+def printVersion():
+    sys.stderr.write('toJiraTable by Tim Savannah, Version %s\n' %(__version__, ))
 
 def handleSpecialCharConversion(item):
     if not item:
@@ -62,6 +70,10 @@ if __name__ == '__main__':
             splitKeepEmpty = True
         elif arg == '--help':
             printUsage()
+            sys.exit(1)
+        elif arg == '--version':
+            sys.stderr.write('\n')
+            printVersion()
             sys.exit(1)
         else:
             sys.stderr.write('Unknown argument: %s\n' %(arg,))
