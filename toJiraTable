@@ -36,6 +36,7 @@ def handleSpecialCharConversion(item):
         return "\t"
     if item == "\\0":
         return "\0"
+    return item
 
 
 if __name__ == '__main__':
