@@ -6,6 +6,8 @@
 import shlex
 import sys
 
+__version__ = '1.1.0'
+__version_tuple__ = (1, 1, 0)
 
 def printUsage():
     sys.stderr.write('''Usage: toJiraTable
@@ -61,7 +63,10 @@ if __name__ == '__main__':
             splitKeepEmpty = True
         elif arg == '--help':
             printUsage()
-            sys.exit(1)
+            sys.exit(0)
+        elif arg == '--version':
+            sys.stderr.write('\ntoJiraTable version %s  by Tim Savannah.\nSee: https://github.com/kata198/toJiraTable\n\n' %(__version__, ))
+            sys.exit(0)
         else:
             sys.stderr.write('Unknown argument: %s\n' %(arg,))
             printUsage()
