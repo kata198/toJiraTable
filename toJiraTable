@@ -70,6 +70,10 @@ if __name__ == '__main__':
     contents = sys.stdin.read().replace('\r', '')
 
     lines = [line for line in contents.split('\n') if line]
+
+    if not lines:
+        sys.exit(0)
+
     output = []
 
     header = lines.pop(0)
